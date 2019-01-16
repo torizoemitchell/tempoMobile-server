@@ -1,10 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const knex = require('../knex')
-// READ ALL records for this table
-router.get('/', (req, res, next) => {
-  res.send('ALL RECORDS')
-})
+
 // READ ONE record for this table
 router.get('/:id', (req, res, next) => {
   res.send('ONE RECORD')

@@ -73,5 +73,8 @@ exports.seed = function(knex, Promise) {
         { id: 66, user_id: 1, date: new Date('2019-02-04'), flow: false, temp: 98.60 },
         { id: 67, user_id: 1, date: new Date('2019-02-05'), flow: false, temp: 98.60 },
       ]);
-    });
+    }).then(function () {
+      // Moves id column (PK) auto-incrementer to correct value after inserts
+      return knex.raw("SELECT setval('entries_id_seq', (SELECT MAX(id) FROM entries))")
+    })
 };

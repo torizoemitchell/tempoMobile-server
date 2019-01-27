@@ -3,7 +3,9 @@ module.exports = {
         client: 'pg',
         connection: 'postgres://localhost/tempomobile'
     },
-    test: {},
+    test: {
+        client: 'pg',
+        connection: 'postgres://localhost/messages'},
     production: {
         client: 'pg',
         connection: process.env.DATABASE_URL

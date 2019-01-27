@@ -49,7 +49,6 @@ router.post('/:user_id', (req, res, next) => {
     let {flow, date, temp} = req.body
     if(!date instanceof Date){
         date = new Date(date)
-        console.log("date: ", date, "type of date: ", typeof date)
     }
     knex('entries')
         .insert({
@@ -60,7 +59,6 @@ router.post('/:user_id', (req, res, next) => {
         })
         .returning('*')
         .then((data) => {
-            console.log("data: ")
             let retData = {
                 id: data[0].id,
                 date: formatDate(data[0].date),
@@ -77,12 +75,43 @@ router.post('/:user_id', (req, res, next) => {
 
 // UPDATE ONE record for this table
 router.put('/:id', (req, res, next) => {
-    res.send('UPDATED RECORD')
+    knex('entries')
+        .where('id', req.params.id)
+        .then((data) => {
+            knex('entries')
+                .where('id', req.params.id)
+                .limit(1)
+                .update({
+                    "flow": req.body.flow,
+                    "temp": req.body.temp
+                })
+                .returning('*')
+                .then((data) => {
+                    res.json(data[0])
+                })
+        })
+        .catch((err) => {
+            next(err)
+        })
 })
 
 // DELETE ONE record for this table
 router.delete('/:id', (req, res, next) => {
-    res.send('DELETED RECORD')
+    knex('entries')
+        .where('id', req.params.id)
+        .first()
+        .then((row) => {
+            if (!row) return next()
+            knex('entries')
+                .del()
+                .where('id', req.params.id)
+                .then(() => {
+                    res.json({message: `ID ${req.params.id} Deleted`})
+                })
+        })
+        .catch((err) => {
+            next(err)
+        })
 })
 
 module.exports = router

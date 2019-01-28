@@ -44,6 +44,7 @@ router.get('/:user_id', (req, res, next) => {
 
 
 // *******Post an entry****************
+//
 router.post('/:user_id', (req, res, next) => {
     //check the request content
     let {flow, date, temp} = req.body
